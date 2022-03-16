@@ -52,9 +52,14 @@ class Graph {
             adjList.clear();
             for (int i = 0; i < n; i++) AddVertice(i);
         }
-
-        void DFS(vector<bool>& visitats, int& c_candidat, int& count_visited) {
+        
+        // Pre: - visitats es el vector de nodes visitats fins al moment
+        //      - c_candidat es el node més petit que s'havia mirat anteriorment que estigués visitat y abans que ell tots estan visitats
+        //      - count_visited: guarda quants nodes s'han visitat sense repetits fins al moment
+        // Post: DFS iniciat pel primer node no visitat >= c_candidat 
+        void DFS(vector<bool>& visitats, int& c_candidat, int& count_visited, bool& ccComplexa) {
                 int mida = adjList.size();
+                int count_cicles = 0;
                 stack<int> pila;
                 for(c_candidat; visitats[c_candidat] == true; c_candidat++);
                 int inici = c_candidat;
@@ -69,30 +74,44 @@ class Graph {
                     for(int i = 0; i < adjList[element].size(); i++) {
                         int contingut = adjList[element][i];
                         if( !visitats[contingut] ){
-                            visitats[contingut]; // marcar como visitado
-                            ++count_visited;     // elemento visitado nuevo
+                            visitats[contingut] = true; // marcar como visitado
+                            ++count_visited;
                             pila.push(contingut); // Añadirlo en la pila
+                        }
+                        else { // hi ha cicle
+                            ++count_cicles;
                         }
                     }
                 }
+                if(count_cicles < 1) ccComplexa = false; // hi ha una component conexa que no es complexa
             }
         
         // Pre: graf != buit
-        // Post: 0 si no conex, 1 si conex
-        int componentsConexes() {
+        // Post:    conex    no complex      resultat
+        //            No        No              0
+        //            No        Si              1
+        //            Si        No              2
+        //            Si        Si              3        
+        int miraPropietats() {
             int mida = adjList.size();
             vector<bool> visitats(mida, false);
-            int count_visited = 0;
+            int count_visited = 0; // comptador per a saber quants nodes hi ha visitats fins al moment sense repetir.
             int c_inicial = 0; // node candidat a ser l'inicial a per continuar visitant al DFS (els anteriors ja estan visitats)
             int cc = 0; // components conexes
             // Si hi ha vertex sense visitar => G no es conex i encara hi ha vertex per visitar
+            bool propComplexes = true; // indica si cumpleix la propientat de que totes les seves components conexes siguin complexes
             do{
-                DFS(visitats, c_inicial, count_visited); // Donat un vertex v, aplicar un DFS per a saber quins nodes hi ha conectats (= visitats)
+                DFS(visitats, c_inicial, count_visited, propComplexes); // Donat un vertex v, aplicar un DFS per a saber quins nodes hi ha conectats (= visitats)
                 cc++;
             } while(count_visited < mida);  // Si no hi ha vertex sense visitar => G conex
-            int total;
-            if(cc == 1) return 0;
-            else return 1;
+            if(cc > 1) {
+                if(propComplexes) return 1;
+                else return 0;
+            }
+            else{
+                if(propComplexes) return 3;
+                else return 2;
+            }
         }
 };
 
