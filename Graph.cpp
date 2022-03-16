@@ -53,37 +53,46 @@ class Graph {
             for (int i = 0; i < n; i++) AddVertice(i);
         }
 
-        void DFS(vector<int>& visitats) {
+        void DFS(vector<bool>& visitats, int& c_candidat, int& count_visited) {
                 int mida = adjList.size();
-                vector<int> visitats;
-                visitats.push_back(0);
                 stack<int> pila;
-                int inici;
-                for(inici = 0; inici < mida || visitats[inici] != inici; inici++); // 1r node no visitat O(n²)
+                for(c_candidat; visitats[c_candidat] == true; c_candidat++);
+                int inici = c_candidat;
+
+                visitats[inici] = true;
+                ++count_visited;
+
                 pila.push(inici);
                 while (not(pila.empty())) {
                     int element = pila.top();
                     pila.pop(); 
                     for(int i = 0; i < adjList[element].size(); i++) {
                         int contingut = adjList[element][i];
-                        if( not(binary_search(visitats.begin(), visitats.end(), contingut)) ){
-                            for(auto it = visitats.begin(); it < visitats.end(); ++it) if(*it > contingut) visitats.insert(it, contingut); // marcar como visitado INEFICIENTE O(n²)
+                        if( !visitats[contingut] ){
+                            visitats[contingut]; // marcar como visitado
+                            ++count_visited;     // elemento visitado nuevo
                             pila.push(contingut); // Añadirlo en la pila
                         }
                     }
                 }
             }
-
+        
+        // Pre: graf != buit
+        // Post: 0 si no conex, 1 si conex
         int componentsConexes() {
-        // escollir si es site (nodes) o bond (arestes) percolation
-            vector<int> visitats;
+            int mida = adjList.size();
+            vector<bool> visitats(mida, false);
+            int count_visited = 0;
+            int c_inicial = 0; // node candidat a ser l'inicial a per continuar visitant al DFS (els anteriors ja estan visitats)
             int cc = 0; // components conexes
             // Si hi ha vertex sense visitar => G no es conex i encara hi ha vertex per visitar
             do{
-                DFS(visitats); // Donat un vertex v, aplicar un DFS per a saber quins nodes hi ha conectats (= visitats)
+                DFS(visitats, c_inicial, count_visited); // Donat un vertex v, aplicar un DFS per a saber quins nodes hi ha conectats (= visitats)
                 cc++;
-            } while(visitats.size() < adjList.size());  // Si no hi ha vertex sense visitar => G conex
-            return cc;
+            } while(count_visited < mida);  // Si no hi ha vertex sense visitar => G conex
+            int total;
+            if(cc == 1) return 0;
+            else return 1;
         }
 };
 
