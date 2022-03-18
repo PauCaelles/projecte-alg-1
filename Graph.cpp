@@ -3,6 +3,8 @@
 #include <vector>
 #include <stack>
 #include <algorithm> // binary_search
+#include <math.h>
+
 
 using namespace std;
 
@@ -12,12 +14,12 @@ class Graph {
     public:
         Graph();
 
-        Graph(int n, int p, Model m) {
+        Graph(int n, float p, Model m) {
             if (m == BINOMIAL) GenerateBinomialRandom(n, p);
             if (m == GEOMETRIC) GenerateGeometricRandom(n, p);
         }
 
-        void GenerateBinomialRandom(int n, int p) {
+        void GenerateBinomialRandom(int n, float p) {
             PopulateNVertices(n);
             vector<bool> checked(n, false);  
             for (int i = 0; i < n; i++) {
@@ -28,7 +30,17 @@ class Graph {
             }  
         }
 
-        map<int, vector<int> > GenerateGeometricRandom(int n, int r);
+        map<int, vector<int> > GenerateGeometricRandom(int n, float r) {
+            PopulateNVertices(n);
+            vector<pair<float, float> > pos = SetVertexPositions(n);
+            vector<bool> checked(n, false);
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (i != j and !checked[j] and distance(pos[i], pos[j]) <= r) AddEdge(i, j);
+                }
+            }  
+
+        };
 
         void AddVertice(int i) {
             adjList.insert( pair<int, vector<int> > (i, vector<int>()));
@@ -38,7 +50,6 @@ class Graph {
             AddAdjacency(adjList[u], v);
             AddAdjacency(adjList[v], u);
         }
-
 
 
     private:
@@ -52,7 +63,21 @@ class Graph {
             adjList.clear();
             for (int i = 0; i < n; i++) AddVertice(i);
         }
-        
+
+        vector<pair<float, float> > SetVertexPositions(int n) {
+            vector<pair<float, float> > v;
+            for (int i = 0; i < n; i++) {
+                float x = rand()/RAND_MAX;
+                float y = rand()/RAND_MAX;
+                v.push_back(pair<float,float>(x,y));
+            } 
+            return v;
+        }
+
+        float distance(pair<float,float> a, pair<float,float> b) { 
+            return sqrt(pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
+        }
+
         // Pre: - visitats es el vector de nodes visitats fins al moment
         //      - c_candidat es el node més petit que s'havia mirat anteriorment que estigués visitat y abans que ell tots estan visitats
         //      - count_visited: guarda quants nodes s'han visitat sense repetits fins al moment
@@ -92,7 +117,8 @@ class Graph {
         //            No        Si              1
         //            Si        No              2
         //            Si        Si              3        
-        int miraPropietats() {
+
+        int MiraPropietats() {
             int mida = adjList.size();
             vector<bool> visitats(mida, false);
             int count_visited = 0; // comptador per a saber quants nodes hi ha visitats fins al moment sense repetir.
