@@ -5,6 +5,7 @@
 #include <algorithm> // binary_search
 #include <math.h>
 
+
 using namespace std;
 
 enum Model{BINOMIAL, GEOMETRIC};
@@ -51,7 +52,6 @@ class Graph {
         }
 
 
-
     private:
         map<int, vector<int> > adjList;
 
@@ -77,7 +77,7 @@ class Graph {
         float distance(pair<float,float> a, pair<float,float> b) { 
             return sqrt(pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
         }
-        
+
         // Pre: - visitats es el vector de nodes visitats fins al moment
         //      - c_candidat es el node més petit que s'havia mirat anteriorment que estigués visitat y abans que ell tots estan visitats
         //      - count_visited: guarda quants nodes s'han visitat sense repetits fins al moment
@@ -117,6 +117,7 @@ class Graph {
         //            No        Si              1
         //            Si        No              2
         //            Si        Si              3        
+
         int MiraPropietats() {
             int mida = adjList.size();
             vector<bool> visitats(mida, false);
