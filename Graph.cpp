@@ -2,9 +2,13 @@
 #include <map>
 #include <vector>
 #include <stack>
+<<<<<<< HEAD
+#include <math.h>
+=======
 #include <algorithm> // binary_search
 #include <math.h>
 
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
 
 using namespace std;
 
@@ -20,6 +24,7 @@ class Graph {
         }
 
         void GenerateBinomialRandom(int n, float p) {
+            srand(time(NULL));
             PopulateNVertices(n);
             vector<bool> checked(n, false);  
             for (int i = 0; i < n; i++) {
@@ -27,22 +32,24 @@ class Graph {
                     float r = rand()/RAND_MAX;
                     if (i != j and !checked[j] and (r <= p)) AddEdge(i, j);
                 }
+            checked[i] = true;
             }  
         }
-
+    
         map<int, vector<int> > GenerateGeometricRandom(int n, float r) {
+            srand(time(NULL));
             PopulateNVertices(n);
             vector<pair<float, float> > pos = SetVertexPositions(n);
             vector<bool> checked(n, false);
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-                    if (i != j and !checked[j] and distance(pos[i], pos[j]) <= r) AddEdge(i, j);
+                    if (i != j and !checked[j] and Distance(pos[i], pos[j]) <= r) AddEdge(i, j);
                 }
+            checked[i] = true;
             }  
+        }
 
-        };
-
-        void AddVertice(int i) {
+        void AddVertex(int i) {
             adjList.insert( pair<int, vector<int> > (i, vector<int>()));
         }
 
@@ -51,7 +58,47 @@ class Graph {
             AddAdjacency(adjList[v], u);
         }
 
+        void VertexPercolation(double p) {
+            srand(time(NULL));
+            for (auto it = adjList.begin(); it != adjList.end();) {
+                double i = ((double)rand() / RAND_MAX);
+                if (i > p) {
+                    vector<int> temp = it->second;
+                    for (int j = 0; j < temp.size(); j++) {
+                        auto it2 = adjList.find(temp[j]);
+                        for (int k = 0; k < it2->second.size(); k++) {
+                            if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
+                        }
+                    }
+                    it = adjList.erase(it);
+                }
+                else ++it;
+            }
+        }
 
+<<<<<<< HEAD
+        void EdgePercolation(double p) {
+            srand(time(NULL));
+            for (auto it = adjList.begin(); it != adjList.end(); it++) {
+                for (int j = 0; j < it->second.size();) {
+                    if (it->first < it->second[j]) {
+                        double i = ((double)rand() / RAND_MAX);
+                        if (i < p) {
+                            auto it2 = adjList.find(it->second[j]);
+                            for (int k = 0; k < it2->second.size(); k++) {
+                                if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
+                            }
+                            it->second.erase(it->second.begin() + j);
+                        }
+                        else j++;
+                    }
+                    else j++;
+                }
+            }
+        }
+
+=======
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
     private:
         map<int, vector<int> > adjList;
 
@@ -61,10 +108,11 @@ class Graph {
 
         void PopulateNVertices(int n) {
             adjList.clear();
-            for (int i = 0; i < n; i++) AddVertice(i);
+            for (int i = 0; i < n; i++) AddVertex(i);
         }
 
         vector<pair<float, float> > SetVertexPositions(int n) {
+            srand(time(NULL));
             vector<pair<float, float> > v;
             for (int i = 0; i < n; i++) {
                 float x = rand()/RAND_MAX;
@@ -74,10 +122,14 @@ class Graph {
             return v;
         }
 
-        float distance(pair<float,float> a, pair<float,float> b) { 
+        float Distance(pair<float,float> a, pair<float,float> b) { 
             return sqrt(pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
         }
+<<<<<<< HEAD
+        
+=======
 
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
         // Pre: - visitats es el vector de nodes visitats fins al moment
         //      - c_candidat es el node més petit que s'havia mirat anteriorment que estigués visitat y abans que ell tots estan visitats
         //      - count_visited: guarda quants nodes s'han visitat sense repetits fins al moment
@@ -117,8 +169,12 @@ class Graph {
         //            No        Si              1
         //            Si        No              2
         //            Si        Si              3        
+<<<<<<< HEAD
+        int CheckProperties() {
+=======
 
         int MiraPropietats() {
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
             int mida = adjList.size();
             vector<bool> visitats(mida, false);
             int count_visited = 0; // comptador per a saber quants nodes hi ha visitats fins al moment sense repetir.
