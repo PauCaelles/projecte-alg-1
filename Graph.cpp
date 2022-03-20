@@ -26,20 +26,21 @@ class Graph {
                     float r = rand()/RAND_MAX;
                     if (i != j and !checked[j] and (r <= p)) AddEdge(i, j);
                 }
+            checked[i] = true;
             }  
         }
-
+    
         map<int, vector<int> > GenerateGeometricRandom(int n, float r) {
             PopulateNVertices(n);
             vector<pair<float, float> > pos = SetVertexPositions(n);
             vector<bool> checked(n, false);
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-                    if (i != j and !checked[j] and distance(pos[i], pos[j]) <= r) AddEdge(i, j);
+                    if (i != j and !checked[j] and Distance(pos[i], pos[j]) <= r) AddEdge(i, j);
                 }
+            checked[i] = true;
             }  
-
-        };
+        }
 
         void AddVertice(int i) {
             adjList.insert( pair<int, vector<int> > (i, vector<int>()));
@@ -50,6 +51,43 @@ class Graph {
             AddAdjacency(adjList[v], u);
         }
 
+        void EliminaNode(double p) {
+            srand(time(NULL));
+            for (auto it = adjList.begin(); it != adjList.end();) {
+                double i = ((double)rand() / RAND_MAX);
+                if (i > p) {
+                    vector<int> temp = it->second;
+                    for (int j = 0; j < temp.size(); j++) {
+                        auto it2 = adjList.find(temp[j]);
+                        for (int k = 0; k < it2->second.size(); k++) {
+                            if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
+                        }
+                    }
+                    it = adjList.erase(it);
+                }
+                else ++it;
+            }
+        }
+
+        void EliminaAresta(double p) {
+            srand(time(NULL));
+            for (auto it = adjList.begin(); it != adjList.end(); it++) {
+                for (int j = 0; j < it->second.size();) {
+                    if (it->first < it->second[j]) {
+                        double i = ((double)rand() / RAND_MAX);
+                        if (i < p) {
+                            auto it2 = adjList.find(it->second[j]);
+                            for (int k = 0; k < it2->second.size(); k++) {
+                                if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
+                            }
+                            it->second.erase(it->second.begin() + j);
+                        }
+                        else j++;
+                    }
+                    else j++;
+                }
+            }
+        }
 
 
     private:
@@ -74,7 +112,7 @@ class Graph {
             return v;
         }
 
-        float distance(pair<float,float> a, pair<float,float> b) { 
+        float Distance(pair<float,float> a, pair<float,float> b) { 
             return sqrt(pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
         }
         
