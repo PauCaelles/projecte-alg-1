@@ -139,6 +139,45 @@ class Graph {
                 else return 2;
             }
         }
+        
+        void eliminaNode(double p) {
+            srand(time(NULL));
+            for (auto it = adjList.begin(); it != adjList.end();) {
+                double i = ((double)rand() / RAND_MAX);
+                if (i > p) {
+                    vector<int> temp = it->second;
+                    for (int j = 0; j < temp.size(); j++) {
+                        auto it2 = adjList.find(temp[j]);
+                        for (int k = 0; k < it2->second.size(); k++) {
+                            if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
+                        }
+                    }
+                    it = adjList.erase(it);
+                }
+                else ++it;
+            }
+        }
+
+
+        void eliminaAresta(double p) {
+            srand(time(NULL));
+            for (auto it = adjList.begin(); it != adjList.end(); it++) {
+                for (int j = 0; j < it->second.size();) {
+                    if (it->first < it->second[j]) {
+                        double i = ((double)rand() / RAND_MAX);
+                        if (i < p) {
+                            auto it2 = adjList.find(it->second[j]);
+                            for (int k = 0; k < it2->second.size(); k++) {
+                                if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
+                            }
+                            it->second.erase(it->second.begin() + j);
+                        }
+                        else j++;
+                    }
+                    else j++;
+                }
+            }
+        }
 };
 
 
