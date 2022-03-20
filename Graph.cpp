@@ -2,7 +2,13 @@
 #include <map>
 #include <vector>
 #include <stack>
+<<<<<<< HEAD
 #include <math.h>
+=======
+#include <algorithm> // binary_search
+#include <math.h>
+
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
 
 using namespace std;
 
@@ -70,6 +76,7 @@ class Graph {
             }
         }
 
+<<<<<<< HEAD
         void EdgePercolation(double p) {
             srand(time(NULL));
             for (auto it = adjList.begin(); it != adjList.end(); it++) {
@@ -90,6 +97,8 @@ class Graph {
             }
         }
 
+=======
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
     private:
         map<int, vector<int> > adjList;
 
@@ -116,7 +125,11 @@ class Graph {
         float Distance(pair<float,float> a, pair<float,float> b) { 
             return sqrt(pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
         // Pre: - visitats es el vector de nodes visitats fins al moment
         //      - c_candidat es el node més petit que s'havia mirat anteriorment que estigués visitat y abans que ell tots estan visitats
         //      - count_visited: guarda quants nodes s'han visitat sense repetits fins al moment
@@ -156,7 +169,12 @@ class Graph {
         //            No        Si              1
         //            Si        No              2
         //            Si        Si              3        
+<<<<<<< HEAD
         int CheckProperties() {
+=======
+
+        int MiraPropietats() {
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
             int mida = adjList.size();
             vector<bool> visitats(mida, false);
             int count_visited = 0; // comptador per a saber quants nodes hi ha visitats fins al moment sense repetir.
