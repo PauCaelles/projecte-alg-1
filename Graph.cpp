@@ -2,7 +2,17 @@
 #include <map>
 #include <vector>
 #include <stack>
+<<<<<<< HEAD
 #include <math.h>
+=======
+<<<<<<< HEAD
+#include <math.h>
+=======
+#include <algorithm> // binary_search
+#include <math.h>
+
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
+>>>>>>> e55563674670bc36f6981fd16b3d8636f882dfc1
 
 using namespace std;
 
@@ -30,7 +40,11 @@ class Graph {
             }  
         }
     
+<<<<<<< HEAD
         void GenerateGeometricRandom(int n, float r) {
+=======
+        map<int, vector<int> > GenerateGeometricRandom(int n, float r) {
+>>>>>>> e55563674670bc36f6981fd16b3d8636f882dfc1
             srand(time(NULL));
             PopulateNVertices(n);
             vector<pair<float, float> > pos = SetVertexPositions(n);
@@ -70,6 +84,10 @@ class Graph {
             }
         }
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> e55563674670bc36f6981fd16b3d8636f882dfc1
         void EdgePercolation(double p) {
             srand(time(NULL));
             for (auto it = adjList.begin(); it != adjList.end(); it++) {
@@ -90,6 +108,8 @@ class Graph {
             }
         }
 
+=======
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
     private:
         map<int, vector<int> > adjList;
 
@@ -111,12 +131,23 @@ class Graph {
                 v.push_back(pair<float,float>(x,y));
             } 
             return v;
+<<<<<<< HEAD
+        }
+
+        float Distance(pair<float,float> a, pair<float,float> b) { 
+            return sqrt(pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
+=======
+>>>>>>> e55563674670bc36f6981fd16b3d8636f882dfc1
         }
 
         float Distance(pair<float,float> a, pair<float,float> b) { 
             return sqrt(pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
         // Pre: - visitats es el vector de nodes visitats fins al moment
         //      - c_candidat es el node més petit que s'havia mirat anteriorment que estigués visitat y abans que ell tots estan visitats
         //      - count_visited: guarda quants nodes s'han visitat sense repetits fins al moment
@@ -156,7 +187,16 @@ class Graph {
         //            No        Si              1
         //            Si        No              2
         //            Si        Si              3        
+<<<<<<< HEAD
         int CheckProperties() {
+=======
+<<<<<<< HEAD
+        int CheckProperties() {
+=======
+
+        int MiraPropietats() {
+>>>>>>> 9dc9289c9c1a2295b0eaf2430ff8f7772fc633d9
+>>>>>>> e55563674670bc36f6981fd16b3d8636f882dfc1
             int mida = adjList.size();
             vector<bool> visitats(mida, false);
             int count_visited = 0; // comptador per a saber quants nodes hi ha visitats fins al moment sense repetir.
@@ -175,6 +215,45 @@ class Graph {
             else{
                 if(propComplexes) return 3;
                 else return 2;
+            }
+        }
+        
+        void eliminaNode(double p) {
+            srand(time(NULL));
+            for (auto it = adjList.begin(); it != adjList.end();) {
+                double i = ((double)rand() / RAND_MAX);
+                if (i > p) {
+                    vector<int> temp = it->second;
+                    for (int j = 0; j < temp.size(); j++) {
+                        auto it2 = adjList.find(temp[j]);
+                        for (int k = 0; k < it2->second.size(); k++) {
+                            if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
+                        }
+                    }
+                    it = adjList.erase(it);
+                }
+                else ++it;
+            }
+        }
+
+
+        void eliminaAresta(double p) {
+            srand(time(NULL));
+            for (auto it = adjList.begin(); it != adjList.end(); it++) {
+                for (int j = 0; j < it->second.size();) {
+                    if (it->first < it->second[j]) {
+                        double i = ((double)rand() / RAND_MAX);
+                        if (i < p) {
+                            auto it2 = adjList.find(it->second[j]);
+                            for (int k = 0; k < it2->second.size(); k++) {
+                                if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
+                            }
+                            it->second.erase(it->second.begin() + j);
+                        }
+                        else j++;
+                    }
+                    else j++;
+                }
             }
         }
 };
