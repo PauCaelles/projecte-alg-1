@@ -2,7 +2,6 @@
 #include <map>
 #include <vector>
 #include <stack>
-#include <algorithm> // binary_search
 #include <math.h>
 
 using namespace std;
@@ -19,6 +18,7 @@ class Graph {
         }
 
         void GenerateBinomialRandom(int n, float p) {
+            srand(time(NULL));
             PopulateNVertices(n);
             vector<bool> checked(n, false);  
             for (int i = 0; i < n; i++) {
@@ -31,6 +31,7 @@ class Graph {
         }
     
         map<int, vector<int> > GenerateGeometricRandom(int n, float r) {
+            srand(time(NULL));
             PopulateNVertices(n);
             vector<pair<float, float> > pos = SetVertexPositions(n);
             vector<bool> checked(n, false);
@@ -42,7 +43,7 @@ class Graph {
             }  
         }
 
-        void AddVertice(int i) {
+        void AddVertex(int i) {
             adjList.insert( pair<int, vector<int> > (i, vector<int>()));
         }
 
@@ -51,7 +52,7 @@ class Graph {
             AddAdjacency(adjList[v], u);
         }
 
-        void EliminaNode(double p) {
+        void VertexPercolation(double p) {
             srand(time(NULL));
             for (auto it = adjList.begin(); it != adjList.end();) {
                 double i = ((double)rand() / RAND_MAX);
@@ -69,7 +70,7 @@ class Graph {
             }
         }
 
-        void EliminaAresta(double p) {
+        void EdgePercolation(double p) {
             srand(time(NULL));
             for (auto it = adjList.begin(); it != adjList.end(); it++) {
                 for (int j = 0; j < it->second.size();) {
@@ -89,7 +90,6 @@ class Graph {
             }
         }
 
-
     private:
         map<int, vector<int> > adjList;
 
@@ -99,10 +99,11 @@ class Graph {
 
         void PopulateNVertices(int n) {
             adjList.clear();
-            for (int i = 0; i < n; i++) AddVertice(i);
+            for (int i = 0; i < n; i++) AddVertex(i);
         }
 
         vector<pair<float, float> > SetVertexPositions(int n) {
+            srand(time(NULL));
             vector<pair<float, float> > v;
             for (int i = 0; i < n; i++) {
                 float x = rand()/RAND_MAX;
@@ -155,7 +156,7 @@ class Graph {
         //            No        Si              1
         //            Si        No              2
         //            Si        Si              3        
-        int MiraPropietats() {
+        int CheckProperties() {
             int mida = adjList.size();
             vector<bool> visitats(mida, false);
             int count_visited = 0; // comptador per a saber quants nodes hi ha visitats fins al moment sense repetir.
