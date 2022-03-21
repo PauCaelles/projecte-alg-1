@@ -120,14 +120,14 @@ class Graph {
         void DFS(vector<bool>& visitats, int& c_candidat, int& count_visited, bool& ccComplexa) {
                 int mida = adjList.size();
                 int count_cicles = 0;
-                stack<int> pila;
+                
                 for(c_candidat; visitats[c_candidat] == true; c_candidat++);
                 int inici = c_candidat;
-
                 ++c_candidat;
                 visitats[inici] = true;
                 ++count_visited;
 
+                stack<int> pila;
                 pila.push(inici);
                 while (not(pila.empty())) {
                     int element = pila.top();
