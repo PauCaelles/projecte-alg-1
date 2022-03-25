@@ -111,25 +111,22 @@ class Graph {
             }
         }
 
-        // Pre: graf != buit, connex = false, noComplex = false
-        // Post:    conex    no complex      resultat
-        //            No        No              0
-        //            No        Si              1
-        //            Si        No              2
-        //            Si        Si              3        
         void CheckProperties(bool& connex, bool& totComplex) {
             int mida = adjList.size();
             vector<bool> visitats(mida, false);
-            int count_visited = 0; // comptador per a saber quants nodes hi ha visitats fins al moment sense repetir.
-            int c_inicial = 0; // node candidat a ser l'inicial a per continuar visitant al DFS (els anteriors ja estan visitats)
-            int cc = 0; // components conexes
-            // Si hi ha vertex sense visitar => G no es conex i encara hi ha vertex per visitar
-            bool propComplexes = true; // indica si compleix la propientat de que totes les seves components conexes siguin complexes
-            do{
-                DFS(visitats, c_inicial, count_visited, propComplexes); // Donat un vertex v, aplicar un DFS per a saber quins nodes hi ha conectats (= visitats)
-                cc++;
-            } while(count_visited < mida);  // Si no hi ha vertex sense visitar => G conex
-            connex = cc == 1;
+            int count_visited = 0; 
+            int c_inicial = 0; 
+            bool propComplexes = true;
+            DFS(visitats, c_inicial, count_visited, propComplexes);
+            bool propConex = true;
+            if(count_visited == mida) propConex = true;
+            else {
+                propConex = false;
+                while(propComplexes && count_visited < mida){
+                    DFS(visitats, c_inicial, count_visited, propComplexes);
+                }
+            } 
+            connex = propConex;
             totComplex = propComplexes;
         }
         
