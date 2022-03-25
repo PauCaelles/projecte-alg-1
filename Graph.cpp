@@ -160,20 +160,17 @@ class Graph {
             return sqrt(pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
         }
 
-        // Pre: - visitats es el vector de nodes visitats fins al moment
-        //      - c_candidat es el node més petit que s'havia mirat anteriorment que estigués visitat y abans que ell tots estan visitats
-        //      - count_visited: guarda quants nodes s'han visitat sense repetits fins al moment
-        // Post: DFS iniciat pel primer node no visitat >= c_candidat 
         void DFS(vector<bool>& visitats, int& c_candidat, int& count_visited, bool& ccComplexa) {
                 int mida = adjList.size();
                 int count_cicles = 0;
-                stack<int> pila;
+                
                 for(c_candidat; visitats[c_candidat] == true; c_candidat++);
                 int inici = c_candidat;
-
+                ++c_candidat;
                 visitats[inici] = true;
                 ++count_visited;
 
+                stack<int> pila;
                 pila.push(inici);
                 while (not(pila.empty())) {
                     int element = pila.top();
@@ -181,16 +178,16 @@ class Graph {
                     for(int i = 0; i < adjList[element].size(); i++) {
                         int contingut = adjList[element][i];
                         if( !visitats[contingut] ){
-                            visitats[contingut] = true; // marcar como visitado
+                            visitats[contingut] = true;
                             ++count_visited;
-                            pila.push(contingut); // Añadirlo en la pila
+                            pila.push(contingut);
                         }
-                        else { // hi ha cicle
+                        else {
                             ++count_cicles;
                         }
                     }
                 }
-                if(count_cicles < 1) ccComplexa = false; // hi ha una component conexa que no es complexa
+                if(count_cicles < 1) ccComplexa = false; 
             }
         
         void DeleteVertex(double p) {
