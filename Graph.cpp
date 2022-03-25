@@ -6,15 +6,36 @@
 
 using namespace std;
 
-enum Model{BINOMIAL, GEOMETRIC};
-
 class Graph {
     public:
         Graph();
 
-        Graph(int n, float p, Model m) {
-            if (m == BINOMIAL) GenerateBinomialRandom(n, p);
-            if (m == GEOMETRIC) GenerateGeometricRandom(n, p);
+        Graph(string m, int n, float p) {
+            if (m == "GRID") GenerateGrid(n);
+            if (m == "BINOMIAL") GenerateBinomialRandom(n, p);
+            if (m == "GEOMETRIC") GenerateGeometricRandom(n, p);
+        }
+
+        void GenerateGrid(int n) {
+            int size = n * n;
+            for (int i = 0; i < size; i++) {
+                vector<int> temp;
+                int col = i % n;
+                if (col == 0) temp.push_back(i+1);
+                else if (col == n - 1)temp.push_back(i - 1);
+                else {
+                    temp.push_back(i + 1);
+                    temp.push_back(i - 1);
+                }
+                int row = i / n;
+                if (row == 0) temp.push_back(i + n); 
+                else if (row == n - 1) temp.push_back(i - n);
+                else {
+                    temp.push_back(i + n);
+                    temp.push_back(i - n);
+                }
+                adjList[i] = temp;
+            }
         }
 
         void GenerateBinomialRandom(int n, float p) {
@@ -76,7 +97,7 @@ class Graph {
                 for (int j = 0; j < it->second.size();) {
                     if (it->first < it->second[j]) {
                         double i = ((double)rand() / RAND_MAX);
-                        if (i < p) {
+                        if (i >= p) {
                             auto it2 = adjList.find(it->second[j]);
                             for (int k = 0; k < it2->second.size(); k++) {
                                 if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
@@ -88,6 +109,28 @@ class Graph {
                     else j++;
                 }
             }
+        }
+
+        // Pre: graf != buit, connex = false, noComplex = false
+        // Post:    conex    no complex      resultat
+        //            No        No              0
+        //            No        Si              1
+        //            Si        No              2
+        //            Si        Si              3        
+        void CheckProperties(bool& connex, bool& totComplex) {
+            int mida = adjList.size();
+            vector<bool> visitats(mida, false);
+            int count_visited = 0; // comptador per a saber quants nodes hi ha visitats fins al moment sense repetir.
+            int c_inicial = 0; // node candidat a ser l'inicial a per continuar visitant al DFS (els anteriors ja estan visitats)
+            int cc = 0; // components conexes
+            // Si hi ha vertex sense visitar => G no es conex i encara hi ha vertex per visitar
+            bool propComplexes = true; // indica si compleix la propientat de que totes les seves components conexes siguin complexes
+            do{
+                DFS(visitats, c_inicial, count_visited, propComplexes); // Donat un vertex v, aplicar un DFS per a saber quins nodes hi ha conectats (= visitats)
+                cc++;
+            } while(count_visited < mida);  // Si no hi ha vertex sense visitar => G conex
+            connex = cc == 1;
+            totComplex = propComplexes;
         }
         
     private:
@@ -149,34 +192,6 @@ class Graph {
                 }
                 if(count_cicles < 1) ccComplexa = false; // hi ha una component conexa que no es complexa
             }
-        
-        // Pre: graf != buit
-        // Post:    conex    no complex      resultat
-        //            No        No              0
-        //            No        Si              1
-        //            Si        No              2
-        //            Si        Si              3        
-        int CheckProperties() {
-            int mida = adjList.size();
-            vector<bool> visitats(mida, false);
-            int count_visited = 0; // comptador per a saber quants nodes hi ha visitats fins al moment sense repetir.
-            int c_inicial = 0; // node candidat a ser l'inicial a per continuar visitant al DFS (els anteriors ja estan visitats)
-            int cc = 0; // components conexes
-            // Si hi ha vertex sense visitar => G no es conex i encara hi ha vertex per visitar
-            bool propComplexes = true; // indica si cumpleix la propientat de que totes les seves components conexes siguin complexes
-            do{
-                DFS(visitats, c_inicial, count_visited, propComplexes); // Donat un vertex v, aplicar un DFS per a saber quins nodes hi ha conectats (= visitats)
-                cc++;
-            } while(count_visited < mida);  // Si no hi ha vertex sense visitar => G conex
-            if(cc > 1) {
-                if(propComplexes) return 1;
-                else return 0;
-            }
-            else{
-                if(propComplexes) return 3;
-                else return 2;
-            }
-        }
         
         void DeleteVertex(double p) {
             srand(time(NULL));
