@@ -49,9 +49,16 @@ void OutputData(vector<vector<float> > results) {
     out.close();
 }
 
-int main() {
+int main(int argc, char** argv) {
 
-    InputData();
+    graphType = argv[1];
+    n = atof(argv[2]);
+    pLow = atof(argv[3]);
+    pHigh = atof(argv[4]);
+    pSteps = atof(argv[5]);
+    percType = argv[6];
+    q = atof(argv[7]);
+    reps = atoi(argv[8]);
 
     float p = pLow;
     vector<vector<float> > totalResults;
@@ -64,6 +71,8 @@ int main() {
             percType == "VERTEX" ? g.VertexPercolation(q) : g.EdgePercolation(q);
             bool connex, complex;
             g.CheckProperties(connex, complex);
+            cout << time(NULL) << endl;
+            g.PrintGraph();
             totalConnex += connex;
             totalComplex += complex;
         }

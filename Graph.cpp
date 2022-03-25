@@ -130,6 +130,15 @@ class Graph {
             totComplex = propComplexes;
         }
         
+        void PrintGraph() {
+            int i = 0;
+            for (auto it = adjList.begin(); it != adjList.end(); it++) {
+                cout << it -> first << ": ";
+                for (auto v : it -> second) cout << v << " ";
+                cout << endl;
+            }
+        }
+        
     private:
         map<int, vector<int> > adjList;
 
