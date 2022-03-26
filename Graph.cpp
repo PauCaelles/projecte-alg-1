@@ -129,18 +129,20 @@ class Graph {
             vector<bool> visitats(mida, false);
             int count_visited = 0; 
             int c_candidat = 0;
-            bool propComplexes = true;
             auto itC_cand = adjList.begin();
-            if(mida > 0) DFS(visitats, c_candidat, itC_cand,count_visited, propComplexes);
-            bool propConex = true;
+            bool propConnex = true;
+            if(mida > 0) {
+                bool propComplexes;
+                DFS(visitats, c_candidat, itC_cand,count_visited, propComplexes);
+                propConnex = count_visited < mida;
+                if(totComplex) totComplex = propComplexes; 
+            }
             if(mida > 0 && count_visited < mida) {
-                propConex = false;
-                while(propComplexes && count_visited < mida){
-                    DFS(visitats, c_candidat, itC_cand, count_visited, propComplexes);
+                while(totComplex && count_visited < mida){
+                    DFS(visitats, c_candidat, itC_cand, count_visited, totComplex);
                 }
             } 
-            connex = propConex;
-            totComplex = propComplexes;
+            connex = propConnex;
         }
         
         void PrintGraph() {
