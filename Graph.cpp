@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+
 using namespace std;
 
 class Graph {
@@ -127,7 +128,7 @@ class Graph {
             int mida = adjList.size();
             vector<bool> visitats(mida, false);
             int count_visited = 0; 
-            int c_inicial = 0; 
+            auto c_inicial = adjList.begin(); 
             bool propComplexes = true;
             DFS(visitats, c_inicial, count_visited, propComplexes);
             bool propConex = true;
@@ -180,12 +181,11 @@ class Graph {
             return sqrt(pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
         }
 
-        void DFS(vector<bool>& visitats, int& c_candidat, int& count_visited, bool& ccComplexa) {
+        void DFS(vector<bool>& visitats, std::map<int, std::vector<int>>::iterator& c_candidat, int& count_visited, bool& ccComplexa) {
                 int mida = adjList.size();
                 int count_cicles = 0;
-                
-                for(c_candidat; visitats[c_candidat] == true; c_candidat++);
-                int inici = c_candidat;
+                while(visitats[(*c_candidat).first] == true) ++c_candidat;
+                const int inici = (*c_candidat).first;
                 ++c_candidat;
                 visitats[inici] = true;
                 ++count_visited;
@@ -193,10 +193,11 @@ class Graph {
                 stack<int> pila;
                 pila.push(inici);
                 while (not(pila.empty())) {
-                    int element = pila.top();
-                    pila.pop(); 
-                    for(int i = 0; i < adjList[element].size(); i++) {
-                        int contingut = adjList[element][i];
+                    const int element = pila.top();
+                    pila.pop();
+                    vector<int> vec = adjList[element];
+                    for(int i = 0; i < vec.size(); i++) {
+                        int contingut = vec[i];
                         if( !visitats[contingut] ){
                             visitats[contingut] = true;
                             ++count_visited;
