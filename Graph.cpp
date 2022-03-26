@@ -185,7 +185,7 @@ class Graph {
                 int mida = adjList.size();
                 int count_cicles = 0;
                 while(visitats[(*c_candidat).first] == true) ++c_candidat;
-                const int inici = (*c_candidat).first;
+                int inici = (*c_candidat).first;
                 ++c_candidat;
                 visitats[inici] = true;
                 ++count_visited;
@@ -193,7 +193,7 @@ class Graph {
                 stack<int> pila;
                 pila.push(inici);
                 while (not(pila.empty())) {
-                    const int element = pila.top();
+                    int element = pila.top();
                     pila.pop();
                     vector<int> vec = adjList[element];
                     for(int i = 0; i < vec.size(); i++) {
