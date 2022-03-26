@@ -1,8 +1,12 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <algorithm>
 #include <stack>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 
@@ -39,12 +43,14 @@ class Graph {
         }
 
         void GenerateBinomialRandom(int n, float p) {
-            srand(time(NULL));
+            struct timespec ts;
+            clock_gettime(CLOCK_MONOTONIC, &ts);
+            srand((time_t)ts.tv_nsec);
             PopulateNVertices(n);
             vector<bool> checked(n, false);  
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-                    float r = rand()/RAND_MAX;
+                    float r = ((float)rand()/RAND_MAX);
                     if (i != j and !checked[j] and (r <= p)) AddEdge(i, j);
                 }
             checked[i] = true;
@@ -52,7 +58,9 @@ class Graph {
         }
     
         void GenerateGeometricRandom(int n, float r) {
-            srand(time(NULL));
+            struct timespec ts;
+            clock_gettime(CLOCK_MONOTONIC, &ts);
+            srand((time_t)ts.tv_nsec);
             PopulateNVertices(n);
             vector<pair<float, float> > pos = SetVertexPositions(n);
             vector<bool> checked(n, false);
@@ -74,7 +82,9 @@ class Graph {
         }
 
         void VertexPercolation(double p) {
-            srand(time(NULL));
+            struct timespec ts;
+            clock_gettime(CLOCK_MONOTONIC, &ts);
+            srand((time_t)ts.tv_nsec);
             for (auto it = adjList.begin(); it != adjList.end();) {
                 double i = ((double)rand() / RAND_MAX);
                 if (i > p) {
@@ -92,7 +102,9 @@ class Graph {
         }
 
         void EdgePercolation(double p) {
-            srand(time(NULL));
+            struct timespec ts;
+            clock_gettime(CLOCK_MONOTONIC, &ts);
+            srand((time_t)ts.tv_nsec);
             for (auto it = adjList.begin(); it != adjList.end(); it++) {
                 for (int j = 0; j < it->second.size();) {
                     if (it->first < it->second[j]) {
@@ -142,7 +154,7 @@ class Graph {
     private:
         map<int, vector<int> > adjList;
 
-        void AddAdjacency(vector<int> adj, int u) {
+        void AddAdjacency(vector<int>& adj, int u) {
             if (find(adj.begin(), adj.end(), u) == adj.end()) adj.push_back(u);
         }
 
@@ -152,11 +164,13 @@ class Graph {
         }
 
         vector<pair<float, float> > SetVertexPositions(int n) {
-            srand(time(NULL));
+            struct timespec ts;
+            clock_gettime(CLOCK_MONOTONIC, &ts);
+            srand((time_t)ts.tv_nsec);
             vector<pair<float, float> > v;
             for (int i = 0; i < n; i++) {
-                float x = rand()/RAND_MAX;
-                float y = rand()/RAND_MAX;
+                float x = ((float)rand()/RAND_MAX);
+                float y = ((float)rand()/RAND_MAX);
                 v.push_back(pair<float,float>(x,y));
             } 
             return v;
@@ -194,48 +208,5 @@ class Graph {
                     }
                 }
                 if(count_cicles < 1) ccComplexa = false; 
-            }
-        
-        void DeleteVertex(double p) {
-            srand(time(NULL));
-            for (auto it = adjList.begin(); it != adjList.end();) {
-                double i = ((double)rand() / RAND_MAX);
-                if (i > p) {
-                    vector<int> temp = it->second;
-                    for (int j = 0; j < temp.size(); j++) {
-                        auto it2 = adjList.find(temp[j]);
-                        for (int k = 0; k < it2->second.size(); k++) {
-                            if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
-                        }
-                    }
-                    it = adjList.erase(it);
-                }
-                else ++it;
-            }
-        }
-
-        void DeleteEdge(double p) {
-            srand(time(NULL));
-            for (auto it = adjList.begin(); it != adjList.end(); it++) {
-                for (int j = 0; j < it->second.size();) {
-                    if (it->first < it->second[j]) {
-                        double i = ((double)rand() / RAND_MAX);
-                        if (i < p) {
-                            auto it2 = adjList.find(it->second[j]);
-                            for (int k = 0; k < it2->second.size(); k++) {
-                                if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
-                            }
-                            it->second.erase(it->second.begin() + j);
-                        }
-                        else j++;
-                    }
-                    else j++;
-                }
-            }
         }
 };
-
-
-
-
-

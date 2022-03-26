@@ -63,15 +63,17 @@ int main(int argc, char** argv) {
     float p = pLow;
     vector<vector<float> > totalResults;
 
-    while(p <= pHigh) {
+    while(p < pHigh + pSteps) {
         float totalConnex = 0, totalComplex = 0;
 
         for (int i = 0; i < reps; i++) {
             Graph g(graphType, n, p);
+            cout <<endl<<endl<<endl<< "ABANS DE LA PERCOLACIO" << pHigh<< endl;
+            g.PrintGraph();
+            cout << endl <<  "DESPRES DE LA PERCOLACIO" << p<< endl;
             percType == "VERTEX" ? g.VertexPercolation(q) : g.EdgePercolation(q);
             bool connex, complex;
             g.CheckProperties(connex, complex);
-            cout << time(NULL) << endl;
             g.PrintGraph();
             totalConnex += connex;
             totalComplex += complex;
@@ -85,7 +87,6 @@ int main(int argc, char** argv) {
 
         p += pSteps;
     }
-
     OutputData(totalResults);
 }
 
