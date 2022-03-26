@@ -128,15 +128,14 @@ class Graph {
             int mida = adjList.size();
             vector<bool> visitats(mida, false);
             int count_visited = 0; 
-            auto c_inicial = adjList.begin(); 
+            int c_candidat = (*adjList.begin()).first; 
             bool propComplexes = true;
-            DFS(visitats, c_inicial, count_visited, propComplexes);
+            if(mida > 0) DFS(visitats, c_candidat, count_visited, propComplexes);
             bool propConex = true;
-            if(count_visited == mida) propConex = true;
-            else {
+            if(mida > 0 && count_visited < mida) {
                 propConex = false;
                 while(propComplexes && count_visited < mida){
-                    DFS(visitats, c_inicial, count_visited, propComplexes);
+                    DFS(visitats, c_candidat, count_visited, propComplexes);
                 }
             } 
             connex = propConex;
@@ -181,11 +180,11 @@ class Graph {
             return sqrt(pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
         }
 
-        void DFS(vector<bool>& visitats, std::map<int, std::vector<int>>::iterator& c_candidat, int& count_visited, bool& ccComplexa) {
+        void DFS(vector<bool>& visitats, int& c_candidat, int& count_visited, bool& ccComplexa) {
                 int mida = adjList.size();
                 int count_cicles = 0;
-                while(visitats[(*c_candidat).first] == true) ++c_candidat;
-                int inici = (*c_candidat).first;
+                while(visitats[c_candidat] == true) ++c_candidat;
+                int inici = c_candidat;
                 ++c_candidat;
                 visitats[inici] = true;
                 ++count_visited;
