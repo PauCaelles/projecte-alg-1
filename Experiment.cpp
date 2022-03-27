@@ -82,14 +82,14 @@ int main(int argc, char** argv) {
                 bool connex, complex;
                 g.CheckProperties(connex, complex);
                 g.PrintGraph();
-                totalConnex += connex;
-                totalComplex += complex;
+                if (connex) totalConnex += 1.0;
+                if (complex) totalComplex += 1.0;
             }
 
-            totalConnex /= reps;
-            totalComplex /= reps;
+            totalConnex = (float)totalConnex/reps;
+            totalComplex = (float)totalComplex/reps;
 
-            vector<float> results{p, totalConnex, totalComplex};
+            vector<float> results{p, q, totalConnex, totalComplex};
             totalResults.push_back(results);
 
             q += qSteps;
