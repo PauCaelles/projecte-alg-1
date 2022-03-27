@@ -11,7 +11,9 @@ float pLow;
 float pHigh;
 float pSteps;
 string percType;
-float q;
+float qLow ;
+float qHigh;
+float qSteps;
 int reps;
 
 void InputData() {
@@ -27,8 +29,12 @@ void InputData() {
     cin >> pSteps;
     cout << "Insert percolation type: ";
     cin >> percType;
-    cout << "Insert Q value: ";
-    cin >> q;
+    cout << "Insert Q starting value: ";
+    cin >> qLow;
+    cout << "Insert Q ending value: ";
+    cin >> qHigh;
+    cout << "Insert Q steps value: ";
+    cin >> qSteps;
     cout << "Insert number of repetitions: ";
     cin >> reps;
 }
@@ -57,31 +63,37 @@ int main(int argc, char** argv) {
     pHigh = atof(argv[4]);
     pSteps = atof(argv[5]);
     percType = argv[6];
-    q = atof(argv[7]);
-    reps = atoi(argv[8]);
+    qLow = atof(argv[7]);
+    qHigh = atof(argv[8]);
+    qSteps = atof(argv[9]);
+    reps = atoi(argv[10]);
 
     float p = pLow;
     vector<vector<float> > totalResults;
 
-    while(p < pHigh + pSteps) {
-        float totalConnex = 0, totalComplex = 0;
+    while(p < pHigh + 0.00001) {
+        float q = qLow;
+        while (q < qHigh + 0.00001) {
+            float totalConnex = 0, totalComplex = 0;
 
-        for (int i = 0; i < reps; i++) {
-            Graph g(graphType, n, p);
-            percType == "VERTEX" ? g.VertexPercolation(q) : g.EdgePercolation(q);
-            bool connex, complex;
-            g.CheckProperties(connex, complex);
-            g.PrintGraph();
-            totalConnex += connex;
-            totalComplex += complex;
+            for (int i = 0; i < reps; i++) {
+                Graph g(graphType, n, p);
+                percType == "VERTEX" ? g.VertexPercolation(q) : g.EdgePercolation(q);
+                bool connex, complex;
+                g.CheckProperties(connex, complex);
+                g.PrintGraph();
+                totalConnex += connex;
+                totalComplex += complex;
+            }
+
+            totalConnex /= reps;
+            totalComplex /= reps;
+
+            vector<float> results{p, totalConnex, totalComplex};
+            totalResults.push_back(results);
+
+            q += qSteps;
         }
-
-        totalConnex /= reps;
-        totalComplex /= reps;
-
-        vector<float> results {p, totalConnex, totalComplex};
-        totalResults.push_back(results);
-
         p += pSteps;
     }
     OutputData(totalResults);

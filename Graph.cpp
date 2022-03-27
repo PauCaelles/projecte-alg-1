@@ -128,20 +128,21 @@ class Graph {
         void CheckProperties(bool& connex, bool& totComplex) {
             int mida = max_elements;//adjList.size();
             vector<bool> visitats(mida, true);
+            int count_visited = 0;
             for (auto it = adjList.begin(); it != adjList.end(); ++it){
                 visitats[it->first] = false;
+                ++count_visited;
             }
-            int count_visited = 0; 
             int c_candidat = 0;
             auto itC_cand = adjList.begin();
             bool propConnex = true;
-            if(mida > 0) {
+            if(adjList.size() > 0) {
                 bool propComplexes;
                 DFS(visitats, c_candidat, itC_cand,count_visited, propComplexes);
                 propConnex = count_visited < mida;
                 if(totComplex) totComplex = propComplexes; 
             }
-            if(mida > 0 && count_visited < mida) {
+            if(adjList.size() > 0 && count_visited < mida) {
                 while(totComplex && count_visited < mida){
                     DFS(visitats, c_candidat, itC_cand, count_visited, totComplex);
                 }
