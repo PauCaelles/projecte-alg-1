@@ -68,9 +68,6 @@ int main(int argc, char** argv) {
 
         for (int i = 0; i < reps; i++) {
             Graph g(graphType, n, p);
-            cout <<endl<<endl<<endl<< "ABANS DE LA PERCOLACIO" << pHigh<< endl;
-            g.PrintGraph();
-            cout << endl <<  "DESPRES DE LA PERCOLACIO" << p<< endl;
             percType == "VERTEX" ? g.VertexPercolation(q) : g.EdgePercolation(q);
             bool connex, complex;
             g.CheckProperties(connex, complex);

@@ -19,6 +19,7 @@ class Graph {
             if (m == "GRID") GenerateGrid(n);
             if (m == "BINOMIAL") GenerateBinomialRandom(n, p);
             if (m == "GEOMETRIC") GenerateGeometricRandom(n, p);
+            max_elements = adjList.size();
         }
 
         void GenerateGrid(int n) {
@@ -90,7 +91,7 @@ class Graph {
                 double i = ((double)rand() / RAND_MAX);
                 if (i > p) {
                     vector<int> temp = it->second;
-                    for (int j = 0; j < temp.size(); j++) {
+                    for (int j = 0; j < temp.size(); ++j) {
                         auto it2 = adjList.find(temp[j]);
                         for (int k = 0; k < it2->second.size(); k++) {
                             if (it2->second[k] == it->first) it2->second.erase(it2->second.begin() + k);
@@ -106,7 +107,7 @@ class Graph {
             struct timespec ts;
             clock_gettime(CLOCK_MONOTONIC, &ts);
             srand((time_t)ts.tv_nsec);
-            for (auto it = adjList.begin(); it != adjList.end(); it++) {
+            for (auto it = adjList.begin(); it != adjList.end(); ++it) {
                 for (int j = 0; j < it->second.size();) {
                     if (it->first < it->second[j]) {
                         double i = ((double)rand() / RAND_MAX);
@@ -117,16 +118,19 @@ class Graph {
                             }
                             it->second.erase(it->second.begin() + j);
                         }
-                        else j++;
+                        else ++j;
                     }
-                    else j++;
+                    else ++j;
                 }
             }
         }
 
         void CheckProperties(bool& connex, bool& totComplex) {
-            int mida = adjList.size();
-            vector<bool> visitats(mida, false);
+            int mida = max_elements;//adjList.size();
+            vector<bool> visitats(mida, true);
+            for (auto it = adjList.begin(); it != adjList.end(); ++it){
+                visitats[it->first] = false;
+            }
             int count_visited = 0; 
             int c_candidat = 0;
             auto itC_cand = adjList.begin();
@@ -156,6 +160,7 @@ class Graph {
         
     private:
         map<int, vector<int> > adjList;
+        int max_elements;
 
         void AddAdjacency(vector<int>& adj, int u) {
             if (find(adj.begin(), adj.end(), u) == adj.end()) adj.push_back(u);
